@@ -1,0 +1,22 @@
+This code is meant to faciliate interaction with nwchem runtime database file including pythin bindings.
+
+To build on Mac:
+make -f makefile.mac
+
+To build on Linux:
+make -f makefile.linux
+
+In both cases python module nwchem will be built automatically but in the local directory.
+Other python installation scenarious can be handled by using setup.py file
+
+Python bindings can be tested by running
+python test.py
+
+Marat Valiev
+Wed Jun  3 18:16:36 PDT 2015
+
+
+
+
+
+

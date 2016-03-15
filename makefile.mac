@@ -1,0 +1,36 @@
+FC=gfortran
+CFLAGS=-g -DEXT_INT -lgfortran -O2 -Wall -Wextra -rdynamic -DNDEBUG $(OPTFLAGS)
+FFLAGS=-fdefault-integer-8
+#CFLAGS=-g -lgfortran -O2 -Wall -Wextra -rdynamic -DNDEBUG $(OPTFLAGS)
+
+SOURCES=rtdb_seq.c error.c f2c.c ma.c table.c hdbm.c
+OBJECTS=$(patsubst %.c,%.o,$(SOURCES)) maf.o
+
+
+TARGET=libnwapi.a
+SO_TARGET=$(patsubst %.a,%.so,$(TARGET))
+
+
+all: $(TARGET) python
+#all: $(TARGET) $(SO_TARGET)
+
+$(TARGET): CFLAGS += -fPIC
+$(TARGET): $(OBJECTS)
+	       ar rcs $@ $(OBJECTS)
+	       ranlib $@
+
+$(SO_TARGET): $(TARGET) $(OBJECTS)
+	       $(CC) -ldl -lgfortran -shared -o $@ $(OBJECTS)
+
+python:
+	rm -rf nwchem.so build/
+	python setup.py build_ext -i
+	
+clean: 
+	rm $(TARGET) $(OBJECTS) $(SO_TARGET)
+
+rtdbtest: rtdbtest.o $(OBJECTS)
+	$(CC) $(CFLAGS) -o $@ $^
+#
+#test-inquire.x: test-inquire.o $(OBJECTS)
+#	$(CC) $(CFLAGS) -o $@ $^
